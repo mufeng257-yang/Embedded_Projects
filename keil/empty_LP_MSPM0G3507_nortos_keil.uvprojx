@@ -340,7 +340,7 @@
               <MiscControls></MiscControls>
               <Define>__MSPM0G3507__,MPU6050,MOTION_DRIVER_TARGET_MSPM0</Define>
               <Undefine></Undefine>
-              <IncludePath>../;..\..\..\..\..\mspm0_sdk_2_10_00_04\source\third_party\CMSIS\Core\Include;..\..\..\..\..\mspm0_sdk_2_10_00_04\source;..\MPU6050;..\MSPM0;..\OLED_Hardware_I2C</IncludePath>
+              <IncludePath>../;D:\ti\mspm0_sdk_2_10_00_04\source\third_party\CMSIS\Core\Include;D:\ti\mspm0_sdk_2_10_00_04\source;..\MPU6050;..\MSPM0;..\OLED_Hardware_I2C</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>

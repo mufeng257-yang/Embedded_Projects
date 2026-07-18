@@ -6,7 +6,7 @@
 *.lst
 
 # Keil temporary files
-*.uvgui.*
+*.uvguix.*
 *.bak
 
 # Build folders

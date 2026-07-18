@@ -60,3 +60,5 @@ sysconfig\_1.27.0
 
 注：如果编译报错，大概率是SDK的路径没有重新配置成你自己的，具体方法参考嘉立创天猛星keil使用手册。
 
+或者自行在Option for Target中修改User ,C/C++(AC6),Linker中的路径
+
