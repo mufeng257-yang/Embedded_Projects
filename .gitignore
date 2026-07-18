@@ -1,0 +1,24 @@
+# Keil generated files
+*.axf
+*.hex
+*.bin
+*.map
+*.lst
+
+# Keil temporary files
+*.uvgui.*
+*.bak
+
+# Build folders
+Objects/
+Listings/
+Debug/
+Release/
+
+# J-Link logs
+JLinkLog.txt
+JLinkSettings.ini
+
+# System files
+.DS_Store
+Thumbs.db
