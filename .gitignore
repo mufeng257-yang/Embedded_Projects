@@ -22,3 +22,6 @@ JLinkSettings.ini
 # System files
 .DS_Store
 Thumbs.db
+
+#else
+**/README.html
