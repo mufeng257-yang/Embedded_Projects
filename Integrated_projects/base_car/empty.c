@@ -31,25 +31,20 @@
  */
 
 #include "ti_msp_dl_config.h"
-#include "stdio.h"
 #include "encoder.h"
 #include "bsp_sr04.h"
 #include "IOI2C.h"
 #include "OLED.h" 
-int fputc(int ch, FILE *stream)
-{
-        while( DL_UART_isBusy(UART_0_INST) == true );
-
-        DL_UART_Main_transmitData(UART_0_INST, ch);
-
-        return ch;
-}
+#include "serial.h"
+int x=0;
+int y=0;
 char cnt_buf[20];
 int main(void)
 {
     SYSCFG_DL_init();
 		
 		TIMER_ENCODER_init();
+		NVIC_EnableIRQ(Bluetooth_INST_INT_IRQN);
 		SR04_Init();
 		encoder_init();
 		OLED_Init();
@@ -59,12 +54,19 @@ int main(void)
 		NVIC_EnableIRQ(SR04_INT_IRQN);
 		delay_ms(10);
     while (1) {
+			if (stringReady) 
+			{
+			sscanf((char*)rxBuffer, "%d,%d", &x, &y);
+			stringReady = false;
+			}
 			uint32_t V=(int)SR04_GetLength();
-			sprintf(cnt_buf,"SR04=%d",V);
-			OLED_ShowString(0,1,(uint8_t*)cnt_buf,16);
+			OLED_ShowString(0,1,(uint8_t*)rxBuffer,16);
+			printf("%s",rxBuffer);
+			printf("x=%d,y=%d",x,y);
 			printf("SR=%dCM ", V);
 			printf("cout1=%3d ",cout1);
 			printf("cout2=%3d\n",cout2);
+
 
     }
 }

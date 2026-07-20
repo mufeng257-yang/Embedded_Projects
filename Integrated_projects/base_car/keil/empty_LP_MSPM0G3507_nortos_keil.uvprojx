@@ -72,7 +72,7 @@
           <BeforeMake>
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name>cmd.exe /C "D:\ti\mspm0_sdk_2_10_00_04\tools\keil/syscfg.bat '$P' empty.syscfg"</UserProg1Name>
+            <UserProg1Name>cmd.exe /C "D:\ti\mspm0_sdk_2_10_00_04\tools\keil\syscfg.bat '$P' empty.syscfg"</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
@@ -340,7 +340,7 @@
               <MiscControls></MiscControls>
               <Define>__MSPM0G3507__</Define>
               <Undefine></Undefine>
-              <IncludePath>../;D:\ti\mspm0_sdk_2_10_00_04\source\third_party\CMSIS\Core\Include;D:\ti\mspm0_sdk_2_10_00_04\source;..\BSP;..\interrupt;..\OLED</IncludePath>
+              <IncludePath>../;D:\ti\mspm0_sdk_2_10_00_04\source\third_party\CMSIS\Core\Include;D:\ti\mspm0_sdk_2_10_00_04\source;..\BSP;..\interrupt;..\OLED;..\serial</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -473,6 +473,21 @@
               <FileName>oledfont.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\OLED\oledfont.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>serial</GroupName>
+          <Files>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\serial\serial.c</FilePath>
+            </File>
+            <File>
+              <FileName>serial.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\serial\serial.h</FilePath>
             </File>
           </Files>
         </Group>

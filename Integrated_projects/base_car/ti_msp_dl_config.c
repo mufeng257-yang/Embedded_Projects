@@ -56,6 +56,7 @@ SYSCONFIG_WEAK void SYSCFG_DL_init(void)
     SYSCFG_DL_TIMER_ENCODER_init();
     SYSCFG_DL_TIMER_SR04_init();
     SYSCFG_DL_UART_0_init();
+    SYSCFG_DL_Bluetooth_init();
     /* Ensure backup structures have no valid state */
 	gTIMER_ENCODERBackup.backupRdy 	= false;
 	gTIMER_SR04Backup.backupRdy 	= false;
@@ -94,12 +95,14 @@ SYSCONFIG_WEAK void SYSCFG_DL_initPower(void)
     DL_TimerA_reset(TIMER_ENCODER_INST);
     DL_TimerA_reset(TIMER_SR04_INST);
     DL_UART_Main_reset(UART_0_INST);
+    DL_UART_Main_reset(Bluetooth_INST);
 
     DL_GPIO_enablePower(GPIOA);
     DL_GPIO_enablePower(GPIOB);
     DL_TimerA_enablePower(TIMER_ENCODER_INST);
     DL_TimerA_enablePower(TIMER_SR04_INST);
     DL_UART_Main_enablePower(UART_0_INST);
+    DL_UART_Main_enablePower(Bluetooth_INST);
     delay_cycles(POWER_STARTUP_DELAY);
 }
 
@@ -110,6 +113,10 @@ SYSCONFIG_WEAK void SYSCFG_DL_GPIO_init(void)
         GPIO_UART_0_IOMUX_TX, GPIO_UART_0_IOMUX_TX_FUNC);
     DL_GPIO_initPeripheralInputFunction(
         GPIO_UART_0_IOMUX_RX, GPIO_UART_0_IOMUX_RX_FUNC);
+    DL_GPIO_initPeripheralOutputFunction(
+        GPIO_Bluetooth_IOMUX_TX, GPIO_Bluetooth_IOMUX_TX_FUNC);
+    DL_GPIO_initPeripheralInputFunction(
+        GPIO_Bluetooth_IOMUX_RX, GPIO_Bluetooth_IOMUX_RX_FUNC);
 
     DL_GPIO_initDigitalInputFeatures(ENCODER_E1A_IOMUX,
 		 DL_GPIO_INVERSION_DISABLE, DL_GPIO_RESISTOR_PULL_DOWN,
@@ -288,5 +295,42 @@ SYSCONFIG_WEAK void SYSCFG_DL_UART_0_init(void)
 
 
     DL_UART_Main_enable(UART_0_INST);
+}
+static const DL_UART_Main_ClockConfig gBluetoothClockConfig = {
+    .clockSel    = DL_UART_MAIN_CLOCK_BUSCLK,
+    .divideRatio = DL_UART_MAIN_CLOCK_DIVIDE_RATIO_1
+};
+
+static const DL_UART_Main_Config gBluetoothConfig = {
+    .mode        = DL_UART_MAIN_MODE_NORMAL,
+    .direction   = DL_UART_MAIN_DIRECTION_TX_RX,
+    .flowControl = DL_UART_MAIN_FLOW_CONTROL_NONE,
+    .parity      = DL_UART_MAIN_PARITY_NONE,
+    .wordLength  = DL_UART_MAIN_WORD_LENGTH_8_BITS,
+    .stopBits    = DL_UART_MAIN_STOP_BITS_ONE
+};
+
+SYSCONFIG_WEAK void SYSCFG_DL_Bluetooth_init(void)
+{
+    DL_UART_Main_setClockConfig(Bluetooth_INST, (DL_UART_Main_ClockConfig *) &gBluetoothClockConfig);
+
+    DL_UART_Main_init(Bluetooth_INST, (DL_UART_Main_Config *) &gBluetoothConfig);
+    /*
+     * Configure baud rate by setting oversampling and baud rate divisors.
+     *  Target baud rate: 115200
+     *  Actual baud rate: 115211.52
+     */
+    DL_UART_Main_setOversampling(Bluetooth_INST, DL_UART_OVERSAMPLING_RATE_16X);
+    DL_UART_Main_setBaudRateDivisor(Bluetooth_INST, Bluetooth_IBRD_32_MHZ_115200_BAUD, Bluetooth_FBRD_32_MHZ_115200_BAUD);
+
+
+    /* Configure Interrupts */
+    DL_UART_Main_enableInterrupt(Bluetooth_INST,
+                                 DL_UART_MAIN_INTERRUPT_RX);
+    /* Setting the Interrupt Priority */
+    NVIC_SetPriority(Bluetooth_INST_INT_IRQN, 0);
+
+
+    DL_UART_Main_enable(Bluetooth_INST);
 }
 
