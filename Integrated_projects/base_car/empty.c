@@ -1,72 +1,91 @@
-/*
- * Copyright (c) 2021, Texas Instruments Incorporated
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * *  Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * *  Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- *
- * *  Neither the name of Texas Instruments Incorporated nor the names of
- *    its contributors may be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
- * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
- * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
 #include "ti_msp_dl_config.h"
 #include "encoder.h"
-#include "bsp_sr04.h"
 #include "IOI2C.h"
 #include "OLED.h" 
+#include "clock.h"
+#include "interrupt.h"
+#include "mpu6050.h"
+#include "motor.h"
 #include "serial.h"
-int x=0;
-int y=0;
-char cnt_buf[20];
+#include "pid.h"
+short y_flag=0;
+float zero_yaw=0.0;
+float error_yaw=0.0;
+int A=0;
+int B=0;
+float Target_jiaodu=0.0f;
+char buf[20];
 int main(void)
 {
     SYSCFG_DL_init();
-		
+		SysTick_Init();
 		TIMER_ENCODER_init();
+		MPU6050_Init();
+		Interrupt_Init();
 		NVIC_EnableIRQ(Bluetooth_INST_INT_IRQN);
-		SR04_Init();
-		encoder_init();
 		OLED_Init();
 		OLED_Clear();
-		cout1=0;
-		cout2=0;
-		NVIC_EnableIRQ(SR04_INT_IRQN);
+		encoder_init();
+		coutA=0;
+		coutB=0;
+		A_speed(0);
+		B_speed(0);
+		PID_Init(&jiaoduhuan,0,0,0,180,-180);
+		PID_Init(&Aspeedhuan,0,0,0,500,-500);
+		PID_Init(&Bspeedhuan,0,0,0,500,-500);
 		delay_ms(10);
     while (1) {
+			if(!DL_GPIO_readPins(KEY_PORT,KEY_key0_PIN)) DL_GPIO_togglePins(LED_PORT,LED_LED0_PIN);
 			if (stringReady) 
 			{
-			sscanf((char*)rxBuffer, "%d,%d", &x, &y);
+			sscanf((char*)rxBuffer, "%f", &Target_jiaodu);
+			zero_yaw=yaw;
+			y_flag=1;
+			sprintf(buf,"Target_jiaodu=%0.1f ",Target_jiaodu);
+			OLED_ShowString(0,0,(uint8_t*)buf,16);
+//			sprintf(buf,"A=%3d ",A);
+//			OLED_ShowString(0,0,(uint8_t*)buf,16);
+//			sprintf(buf,"B=%3d ",B);
+//			OLED_ShowString(0,2,(uint8_t*)buf,16);
 			stringReady = false;
 			}
-			uint32_t V=(int)SR04_GetLength();
-			OLED_ShowString(0,1,(uint8_t*)rxBuffer,16);
-			printf("%s",rxBuffer);
-			printf("x=%d,y=%d",x,y);
-			printf("SR=%dCM ", V);
-			printf("cout1=%3d ",cout1);
-			printf("cout2=%3d\n",cout2);
+			if(!y_flag){printf("yaw=%4.1f\n",yaw);}
+			if(y_flag){
+			error_yaw=yaw-zero_yaw;
+			if (error_yaw>180) error_yaw=360-error_yaw;
+			if (error_yaw<-180) error_yaw=360-error_yaw;
+				
+			if (error_yaw>5+Target_jiaodu)
+				{ 
+					A_speed(100);
+					B_speed(-100);
+				}
+			else if (error_yaw<Target_jiaodu-5)
+				{ 
+					A_speed(-100);
+					B_speed(100);
+				}
+			else 
+				{
+					y_flag=0;
+					A_speed(0);
+					B_speed(0);
+				}
+		}
+			
+//			DL_GPIO_togglePins(citie_PORT,citie_work_PIN);
+//			delay_ms(1000);
+		
+//			sprintf(buf,"%-6.1f", pitch);
+//			OLED_ShowString(0,0,(uint8_t*)buf,16);
+//			sprintf(buf,"%-6.1f", roll);
+//			OLED_ShowString(0,2,(uint8_t*)buf,16);
+			sprintf(buf,"%-6.1f", yaw);
+			OLED_ShowString(0,2,(uint8_t*)buf,16);
 
-
+//			sprintf(buf,"cout1=%3d ",coutA);
+//			OLED_ShowString(0,4,(uint8_t*)buf,16);
+//			sprintf(buf,"cout2=%3d ",coutB);
+//			OLED_ShowString(0,6,(uint8_t*)buf,16);
     }
 }

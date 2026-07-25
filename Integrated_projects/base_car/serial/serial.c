@@ -5,9 +5,9 @@ volatile bool stringReady = false;
 
 int fputc(int ch, FILE *stream)
 {
-        while( DL_UART_isBusy(UART_0_INST) == true );
+        while( DL_UART_isBusy(Bluetooth_INST) == true );
 
-        DL_UART_Main_transmitData(UART_0_INST, ch);
+        DL_UART_Main_transmitData(Bluetooth_INST, ch);
 
         return ch;
 }
@@ -17,7 +17,7 @@ void Bluetooth_INST_IRQHandler(void)
     {
         case DL_UART_IIDX_RX:{
             char rxChar = DL_UART_Main_receiveData(Bluetooth_INST);
-						if (rxChar == '\n' || rxChar == '\r') {
+						if (rxChar == '\n' || rxChar == 'e') {
 								if (rxIndex > 0) {
 										rxBuffer[rxIndex] = '\0';
 										stringReady = true;     
