@@ -242,6 +242,38 @@ extern "C" {
 /* Defines for SCL: GPIOA.1 with pinCMx 2 on package pin 34 */
 #define IIC_Software_SCL_PIN                                     (DL_GPIO_PIN_1)
 #define IIC_Software_SCL_IOMUX                                    (IOMUX_PINCM2)
+/* Defines for H1: GPIOB.13 with pinCMx 30 on package pin 1 */
+#define Huidu_H1_PORT                                                    (GPIOB)
+#define Huidu_H1_PIN                                            (DL_GPIO_PIN_13)
+#define Huidu_H1_IOMUX                                           (IOMUX_PINCM30)
+/* Defines for H2: GPIOB.12 with pinCMx 29 on package pin 64 */
+#define Huidu_H2_PORT                                                    (GPIOB)
+#define Huidu_H2_PIN                                            (DL_GPIO_PIN_12)
+#define Huidu_H2_IOMUX                                           (IOMUX_PINCM29)
+/* Defines for H3: GPIOB.23 with pinCMx 51 on package pin 22 */
+#define Huidu_H3_PORT                                                    (GPIOB)
+#define Huidu_H3_PIN                                            (DL_GPIO_PIN_23)
+#define Huidu_H3_IOMUX                                           (IOMUX_PINCM51)
+/* Defines for H4: GPIOB.26 with pinCMx 57 on package pin 28 */
+#define Huidu_H4_PORT                                                    (GPIOB)
+#define Huidu_H4_PIN                                            (DL_GPIO_PIN_26)
+#define Huidu_H4_IOMUX                                           (IOMUX_PINCM57)
+/* Defines for H5: GPIOB.6 with pinCMx 23 on package pin 58 */
+#define Huidu_H5_PORT                                                    (GPIOB)
+#define Huidu_H5_PIN                                             (DL_GPIO_PIN_6)
+#define Huidu_H5_IOMUX                                           (IOMUX_PINCM23)
+/* Defines for H6: GPIOB.7 with pinCMx 24 on package pin 59 */
+#define Huidu_H6_PORT                                                    (GPIOB)
+#define Huidu_H6_PIN                                             (DL_GPIO_PIN_7)
+#define Huidu_H6_IOMUX                                           (IOMUX_PINCM24)
+/* Defines for H7: GPIOB.16 with pinCMx 33 on package pin 4 */
+#define Huidu_H7_PORT                                                    (GPIOB)
+#define Huidu_H7_PIN                                            (DL_GPIO_PIN_16)
+#define Huidu_H7_IOMUX                                           (IOMUX_PINCM33)
+/* Defines for H8: GPIOA.2 with pinCMx 7 on package pin 42 */
+#define Huidu_H8_PORT                                                    (GPIOA)
+#define Huidu_H8_PIN                                             (DL_GPIO_PIN_2)
+#define Huidu_H8_IOMUX                                            (IOMUX_PINCM7)
 
 
 /* clang-format on */

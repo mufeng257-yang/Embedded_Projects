@@ -15,6 +15,7 @@ int A=0;
 int B=0;
 float Target_jiaodu=0.0f;
 char buf[20];
+bool h1,h2,h3,h4,h5,h6,h7,h8;
 int main(void)
 {
     SYSCFG_DL_init();
@@ -35,43 +36,55 @@ int main(void)
 		PID_Init(&Bspeedhuan,0,0,0,500,-500);
 		delay_ms(10);
     while (1) {
-			if(!DL_GPIO_readPins(KEY_PORT,KEY_key0_PIN)) DL_GPIO_togglePins(LED_PORT,LED_LED0_PIN);
-			if (stringReady) 
-			{
-			sscanf((char*)rxBuffer, "%f", &Target_jiaodu);
-			zero_yaw=yaw;
-			y_flag=1;
-			sprintf(buf,"Target_jiaodu=%0.1f ",Target_jiaodu);
-			OLED_ShowString(0,0,(uint8_t*)buf,16);
+			
+			//h1=DL_GPIO_readPins(GPIOB,Huidu_H1_PIN);
+			h2=DL_GPIO_readPins(GPIOB,Huidu_H2_PIN);
+			h3=DL_GPIO_readPins(GPIOB,Huidu_H3_PIN);
+			h4=DL_GPIO_readPins(GPIOB,Huidu_H4_PIN);
+			h5=DL_GPIO_readPins(GPIOB,Huidu_H5_PIN);
+			h6=DL_GPIO_readPins(GPIOB,Huidu_H6_PIN);
+			h7=DL_GPIO_readPins(GPIOB,Huidu_H7_PIN);
+			//h8=DL_GPIO_readPins(GPIOA,Huidu_H8_PIN);
+			//printf("%d,%d,%d,%d,%d,%d\n",h2,h3,h4,h5,h6,h7);
+			
+//			if(!DL_GPIO_readPins(KEY_PORT,KEY_key0_PIN)) DL_GPIO_togglePins(LED_PORT,LED_LED0_PIN);
+			
+//			if (stringReady) 
+//			{
+//			sscanf((char*)rxBuffer, "%f", &Target_jiaodu);
+//			zero_yaw=yaw;
+//			y_flag=1;
+//			sprintf(buf,"Target_jiaodu=%0.1f ",Target_jiaodu);
+//			OLED_ShowString(0,0,(uint8_t*)buf,16);
 //			sprintf(buf,"A=%3d ",A);
 //			OLED_ShowString(0,0,(uint8_t*)buf,16);
 //			sprintf(buf,"B=%3d ",B);
 //			OLED_ShowString(0,2,(uint8_t*)buf,16);
-			stringReady = false;
-			}
-			if(!y_flag){printf("yaw=%4.1f\n",yaw);}
-			if(y_flag){
-			error_yaw=yaw-zero_yaw;
-			if (error_yaw>180) error_yaw=360-error_yaw;
-			if (error_yaw<-180) error_yaw=360-error_yaw;
-				
-			if (error_yaw>5+Target_jiaodu)
-				{ 
-					A_speed(100);
-					B_speed(-100);
-				}
-			else if (error_yaw<Target_jiaodu-5)
-				{ 
-					A_speed(-100);
-					B_speed(100);
-				}
-			else 
-				{
-					y_flag=0;
-					A_speed(0);
-					B_speed(0);
-				}
-		}
+//			stringReady = false;
+//			}
+//			if(!y_flag){printf("yaw=%4.1f\n",yaw);}
+//			if(y_flag){
+//			error_yaw=yaw-zero_yaw;
+//			if (error_yaw>180) error_yaw=360-error_yaw;
+//			if (error_yaw<-180) error_yaw=360-error_yaw;
+//				
+//			if (error_yaw>5+Target_jiaodu)
+//				{ 
+//					A_speed(100);
+//					B_speed(-100);
+//				}
+//			else if (error_yaw<Target_jiaodu-5)
+//				{ 
+//					A_speed(-100);
+//					B_speed(100);
+//				}
+//			else 
+//				{
+//					y_flag=0;
+//					A_speed(0);
+//					B_speed(0);
+//				}
+//		}
 			
 //			DL_GPIO_togglePins(citie_PORT,citie_work_PIN);
 //			delay_ms(1000);
@@ -80,8 +93,8 @@ int main(void)
 //			OLED_ShowString(0,0,(uint8_t*)buf,16);
 //			sprintf(buf,"%-6.1f", roll);
 //			OLED_ShowString(0,2,(uint8_t*)buf,16);
-			sprintf(buf,"%-6.1f", yaw);
-			OLED_ShowString(0,2,(uint8_t*)buf,16);
+//			sprintf(buf,"%-6.1f", yaw);
+//			OLED_ShowString(0,2,(uint8_t*)buf,16);
 
 //			sprintf(buf,"cout1=%3d ",coutA);
 //			OLED_ShowString(0,4,(uint8_t*)buf,16);
