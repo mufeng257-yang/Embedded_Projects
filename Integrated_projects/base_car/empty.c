@@ -21,7 +21,7 @@ int data=0;
 int main(void)
 {
     SYSCFG_DL_init();
-		NVIC_EnableIRQ(UART_0_INST_INT_IRQN);
+		NVIC_EnableIRQ(Bluetooth_INST_INT_IRQN);
 		SysTick_Init();
 		TIMER_ENCODER_init();
 		MPU6050_Init();
@@ -35,8 +35,8 @@ int main(void)
 		A_speed(0);
 		B_speed(0);
 		PID_Init(&jiaoduhuan,0,0,0,180,-180);
-		PID_Init(&Aspeedhuan,5,0,0,500,-500);
-		PID_Init(&Bspeedhuan,5,0,0,500,-500);
+		PID_Init(&Aspeedhuan,30,0,0,500,-500);
+		PID_Init(&Bspeedhuan,30,0,0,500,-500);
 		delay_ms(10);
     while (1) {
 			printf("%d,%d,%d,%d,%d,%d\n",A_PWM,B_PWM,coutA,coutB,A,B);
@@ -64,13 +64,7 @@ int main(void)
 				else if(cmd==5) B=data;
 				else if(cmd==6) Bspeedhuan.Kp=data;
 				else if(cmd==7) Bspeedhuan.Kd=data;
-				else if(cmd==8) Bspeedhuan.Ki=data;
-//			sscanf((char*)rxBuffer, "%d,%d", &A,&B);
-//			sprintf(buf,"A=%3d ",A);
-//			OLED_ShowString(0,0,(uint8_t*)buf,16);
-//			sprintf(buf,"B=%3d ",B);
-//			OLED_ShowString(0,2,(uint8_t*)buf,16);
-				
+				else if(cmd==8) Bspeedhuan.Ki=data;		
 				printf("%d,%d\n",cmd,data);
 				stringReady = false;
 			}
@@ -79,27 +73,9 @@ int main(void)
 //			error_yaw=yaw-zero_yaw;
 //			if (error_yaw>180) error_yaw=360-error_yaw;
 //			if (error_yaw<-180) error_yaw=360-error_yaw;
-//				
-//			if (error_yaw>5+Target_jiaodu)
-//				{ 
-//					A_speed(100);
-//					B_speed(-100);
-//				}
-//			else if (error_yaw<Target_jiaodu-5)
-//				{ 
-//					A_speed(-100);					
-//					B_speed(100);
-//				}
-//			else 
-//				{
-//					y_flag=0;
-//					A_speed(0);
-//					B_speed(0);
-//				}
 //		}
 			
 //			DL_GPIO_togglePins(citie_PORT,citie_work_PIN);
-//			delay_ms(1000);
 		
 //			sprintf(buf,"%-6.1f", pitch);
 //			OLED_ShowString(0,0,(uint8_t*)buf,16);
