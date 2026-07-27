@@ -6,6 +6,7 @@
 extern volatile char rxBuffer[RX_BUFFER_SIZE];
 extern volatile uint16_t rxIndex;
 extern volatile bool stringReady;
-
-void Bluetooth_INST_IRQHandler(void);
+extern volatile unsigned char  rxChar;
+int fputc(int ch, FILE *stream);
+void UART_0_INST_IRQHandler(void);
 #endif

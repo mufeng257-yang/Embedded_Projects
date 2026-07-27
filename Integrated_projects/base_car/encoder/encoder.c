@@ -28,10 +28,3 @@ void TIMER_ENCODER_init(void)
 	NVIC_EnableIRQ(TIMER_ENCODER_INST_INT_IRQN);
 }
 int encoder_flag=0;
-void TIMER_ENCODER_INST_IRQHandler(){
-
-if( DL_TimerA_getPendingInterrupt(TIMER_ENCODER_INST) == DL_TIMER_IIDX_ZERO )
-	{
-		encoder_update();
-	}
-}

@@ -11,6 +11,8 @@ extern int A;
 extern int B;
 extern float Target_jiaodu;
 extern float error_yaw;
+int A_PWM=0;
+int B_PWM=0;
 void Interrupt_Init(void)
 {
     if(enable_group1_irq)
@@ -23,6 +25,25 @@ void SysTick_Handler(void)
 {
     tick_ms++;
 }
+void TIMER_ENCODER_INST_IRQHandler(){
+
+if( DL_TimerA_getPendingInterrupt(TIMER_ENCODER_INST) == DL_TIMER_IIDX_ZERO )
+	{
+		encoder_update();
+//				float jiaodu_out=PID_Compute(&jiaoduhuan,Target_jiaodu,error_yaw);
+		float Aspeed_out=PID_Compute(&Aspeedhuan,(float)A,(float)coutA);
+		float Bspeed_out=PID_Compute(&Bspeedhuan,(float)B,(float)coutB);
+		A_PWM+=Aspeed_out;
+		B_PWM+=Bspeed_out;
+		if(A_PWM>1000) A_PWM=1000;
+		if(A_PWM<-1000) A_PWM=-1000;
+		if(B_PWM>1000) B_PWM=1000;
+		if(B_PWM<-1000) B_PWM=-1000;
+		A_speed(A_PWM);
+		B_speed(B_PWM);
+		//printf("%d,%d,%d,%d\n",A_PWM,B_PWM,coutA,coutB);
+	}
+}
 
 void GROUP1_IRQHandler(void)
 {
@@ -32,12 +53,7 @@ void GROUP1_IRQHandler(void)
     
   if((gpio_status & GPIO_MPU6050_PIN_MPU6050_INT_PIN) == GPIO_MPU6050_PIN_MPU6050_INT_PIN){
 				Read_Quad();
-//				float Aspeed_out=PID_Compute(&Aspeedhuan,(float)A,(float)coutA);
-//				float Bspeed_out=PID_Compute(&Bspeedhuan,(float)B,(float)coutB);
-//				float jiaodu_out=PID_Compute(&jiaoduhuan,Target_jiaodu,error_yaw);
-//				A_speed((int)(Aspeed_out+jiaodu_out));
-//				B_speed((int)(Bspeed_out-jiaodu_out));
-//				printf("%0.2f,%0.2f,%0.2f\n",Aspeed_out,Bspeed_out,jiaodu_out);
+
 				DL_GPIO_clearInterruptStatus(GPIO_MPU6050_PORT,GPIO_MPU6050_PIN_MPU6050_INT_PIN);
     }
 

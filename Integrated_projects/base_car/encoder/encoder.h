@@ -7,6 +7,7 @@ extern int volatile coutB;
 extern int volatile raw_coutA;
 extern int volatile raw_coutB;
 extern int encoder_flag;
-void TIMER_ENCODER_init(void);
 void encoder_init(void);
+void encoder_update(void);
+void TIMER_ENCODER_init(void);
 #endif
